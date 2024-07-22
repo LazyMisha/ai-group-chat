@@ -1,0 +1,9 @@
+.user-image-container {
+    display: flex;
+    align-items: center;
+    padding: 0 5px 0 0;
+}
+
+.user-image {
+    border-radius: 50%;
+}
