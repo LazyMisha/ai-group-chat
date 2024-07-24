@@ -13,14 +13,18 @@ const CreateChatPopup = ({
 }) => {
     const [chatName, setChatName] = useState('');
     const [selectedUserIds, setSelectedUserIds] = useState([]);
+    const { id: currentUserId } = currentUser;
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const chat = {
             chatName,
-            users: selectedUserIds,
             messages: [],
+            creator: currentUserId,
+            users: [currentUserId, ...selectedUserIds],
+            createdAt: new Date().toISOString(),
+            id: crypto.randomUUID(),
         };
 
         await post('/api/chats', chat);

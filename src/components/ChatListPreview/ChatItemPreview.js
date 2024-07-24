@@ -1,26 +1,46 @@
+import Link from 'next/link';
 import styles from './chatListPreview.module.css';
 
 const ChatItemPreview = ({ 
     chat,
-    setActiveChat,
+    deleteChat,
+    sessionUser,
 }) => {
-    const { chatName, users } = chat;
+    const { chatName, users, creator, createdAt } = chat;
+    const { id: sessionUserId } = sessionUser;
+
+    const deleteSelectedChat = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        deleteChat(chat.id);
+    }
 
     return (
-        <div 
+        <Link 
             className={styles['chat-item-preview']}
-            onClick={() => setActiveChat(chat)}
+            href={`/chat/${chat.id}`}
         >
-            <div className={styles['chat-item-name']} >
-                {chatName}
+            <div>
+                <div className={styles['chat-item-name']} >
+                    {chatName}
+                </div>
+                <div className={styles['chat-item-users']} >
+                    Users: {users.join(', ')}
+                </div>
+                <div className={styles['chat-item-created']}>
+                    Created: {createdAt}
+                </div>
             </div>
-            <div className={styles['chat-item-users']} >
-                Users: {users.join(', ')}
-            </div>
-            <div className={styles['chat-item-created']}>
-                Created: {new Date().toLocaleDateString()}
-            </div>
-        </div>
+            { creator === sessionUserId &&
+                <div 
+                    className={styles['chat-item-delete']}
+                    onClick={deleteSelectedChat}
+                >
+                    &#x2421;
+                </div>
+            }
+        </Link>
     );
 }
 

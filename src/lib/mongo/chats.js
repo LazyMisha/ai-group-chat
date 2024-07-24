@@ -18,6 +18,10 @@ export const updateChat = async (chatId, chat) => {
     return await chatsCollection.updateOne({ id: chatId }, { $set: chat });
 };
 
+export const deleteChat = async (chatId) => {
+    return await chatsCollection.deleteOne({ id: chatId });
+}
+
 const init = async () => {
     try {
         if (chatsCollection) {

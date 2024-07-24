@@ -1,20 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { signOut } from 'next-auth/react';
 import UserImage from '../UserImage';
 import CreateChatPopup from '../CreateChatPopup';
 import ChatListPreview from '../ChatListPreview';
-import { get } from '@/lib/requests';
+import KebabMenu from '../KebabMenu';
+import { get, del } from '@/lib/requests';
 import styles from './sidebar.module.css';
 
 const Sidebar = ({ 
-    user,
-    setActiveChat,
+    sessionUser,
 }) => {
     const [chats, setChats] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
     const [showKebabMenu, setShowKebabMenu] = useState(false);
+
+    const {
+        image: sessionUserImage,
+        name: sessionUserName,
+    } = sessionUser;
 
     useEffect(() => {
         const fetchChats = async () => {
@@ -34,16 +38,24 @@ const Sidebar = ({
         setShowKebabMenu(!showKebabMenu);
     }
 
+    const deleteChat = async (chatId) => {
+        await del(`/api/chats?chatId=${chatId}`);
+
+        const updatedChats = chats.filter((chat) => chat.id !== chatId);
+
+        setChats(updatedChats);
+    }
+
     return (
         <div className={styles['sidebar-container']}>
             <div className={styles['sidebar-top']}>
                 <div className={styles['user-info']}>
                     <UserImage 
-                        image={user.image} 
-                        name={user.name} 
+                        image={sessionUserImage} 
+                        name={sessionUserName} 
                     />
                     <div className={styles['user-name']}>
-                        {user.name}
+                        {sessionUserName}
                     </div>
                     <button 
                         className={styles['kebab-menu-button']}
@@ -53,20 +65,10 @@ const Sidebar = ({
                             &#x22EE;
                         </span>
                     </button>
-                    {
-                        showKebabMenu && (
-                            <div className={styles['kebab-menu']}>
-                                <button 
-                                    className={styles['kebab-menu-item']} 
-                                    onClick={() => signOut({ 
-                                        callbackUrl: '/', 
-                                        redirect: true 
-                                    })}
-                                >
-                                    Sign Out
-                                </button>
-                            </div>
-                        )
+                    {showKebabMenu && 
+                        <KebabMenu 
+                            closeMenu={() => setShowKebabMenu(false)} 
+                        />
                     }
                 </div>
                 <button 
@@ -78,7 +80,8 @@ const Sidebar = ({
             </div>
             <ChatListPreview 
                 chats={chats} 
-                setActiveChat={setActiveChat}
+                deleteChat={deleteChat}
+                sessionUser={sessionUser}
             />
             {
                 showPopup && (

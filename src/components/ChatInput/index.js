@@ -1,29 +1,21 @@
-'use client';
-
-import { useState } from 'react';
 import styles from './chatInput.module.css';
 
-const ChatInput = ({ sendMessage }) => {
-    const [message, setMessage] = useState('');
-    const handleChange = (e) => {
-        setMessage(e.target.value);
-    };
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        sendMessage(message);
-        setMessage('');
-    };
+const ChatInput = ({ 
+    sendMessage,
+    inputValue,
+    setInputValue,
+}) => {
     return (
         <div className={styles['chat-input-container']}>
             <form
                 className={styles['chat-input-form']}
-                onSubmit={handleSubmit}
+                onSubmit={sendMessage}
             >
                 <input
                     className={styles['chat-input']}
                     type="text"
-                    value={message}
-                    onChange={handleChange}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Type a message..."
                 />
                 <button

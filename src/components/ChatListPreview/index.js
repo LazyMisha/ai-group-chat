@@ -3,7 +3,8 @@ import styles from './chatListPreview.module.css';
 
 const ChatListPreview = ({ 
     chats,
-    setActiveChat,
+    deleteChat,
+    sessionUser,
 }) => {
     return (
         <div className={styles['chat-list-preview']}>
@@ -16,7 +17,8 @@ const ChatListPreview = ({
                         <ChatItemPreview 
                             key={chat.id || crypto.randomUUID()} 
                             chat={chat}
-                            setActiveChat={setActiveChat}
+                            deleteChat={deleteChat}
+                            sessionUser={sessionUser}
                         />
                     ))
                 }
