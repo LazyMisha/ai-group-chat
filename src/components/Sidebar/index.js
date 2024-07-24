@@ -87,7 +87,7 @@ const Sidebar = ({
                 showPopup && (
                     <CreateChatPopup 
                         onClose={() => setShowPopup(false)} 
-                        currentUser={user}
+                        sessionUser={sessionUser}
                         setChats={setChats}
                         chats={chats}
                     />

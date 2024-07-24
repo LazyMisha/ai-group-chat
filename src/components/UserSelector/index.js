@@ -5,7 +5,7 @@ import UserSelectorOption from '../UserSelectorOption';
 import styles from './userSelector.module.css';
 
 const UserSelector = ({ 
-    currentUser,
+    sessionUser,
     selectedUserIds,
     setSelectedUserIds,
 }) => {
@@ -43,7 +43,7 @@ const UserSelector = ({
                     name,
                     image,
                 }) => (
-                    currentUser?.name !== name 
+                    sessionUser?.name !== name 
                     ? <UserSelectorOption
                             key={id}
                             id={id}

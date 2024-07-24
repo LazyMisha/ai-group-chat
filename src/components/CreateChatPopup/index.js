@@ -7,13 +7,13 @@ import styles from './createChatPopup.module.css';
 
 const CreateChatPopup = ({ 
    onClose,
-   currentUser,
+   sessionUser,
    setChats,
    chats,
 }) => {
     const [chatName, setChatName] = useState('');
     const [selectedUserIds, setSelectedUserIds] = useState([]);
-    const { id: currentUserId } = currentUser;
+    const { id: sessionUserId } = sessionUser;
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -21,8 +21,8 @@ const CreateChatPopup = ({
         const chat = {
             chatName,
             messages: [],
-            creator: currentUserId,
-            users: [currentUserId, ...selectedUserIds],
+            creator: sessionUserId,
+            users: [sessionUserId, ...selectedUserIds],
             createdAt: new Date().toISOString(),
             id: crypto.randomUUID(),
         };
@@ -69,7 +69,7 @@ const CreateChatPopup = ({
                     Selected Users: {selectedUserIds.length}
                 </span>
                 <UserSelector
-                    currentUser={currentUser}
+                    sessionUser={sessionUser}
                     selectedUserIds={selectedUserIds}
                     setSelectedUserIds={setSelectedUserIds}
                 />
