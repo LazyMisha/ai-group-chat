@@ -3,23 +3,18 @@ import mongoClient from '.';
 let usersCollection;
 
 export const getUser = async (id) => {
-    const collection = await getUsersCollection();
-
-    return await collection.findOne({ id })
+    return await usersCollection.findOne({ id })
 }
 
 export const getUsers = async () => {
-    const collection = await getUsersCollection();
-
-    return await collection.find().toArray();
+    return await usersCollection.find().toArray();
 }
 
 export const saveUser = async (user) => {
-    const collection = await getUsersCollection();
-    const userExists = await collection.findOne({ id: user.id });
+    const userExists = await usersCollection.findOne({ id: user.id });
 
     if (!userExists) {
-        await collection.insertOne(user);
+        await usersCollection.insertOne(user);
 
         return user;
 
@@ -29,11 +24,10 @@ export const saveUser = async (user) => {
 }
 
 export const updateUser = async (id, data) => {
-    const collection = await getUsersCollection();
-    const user = await collection.findOne({ id });
+    const user = await usersCollection.findOne({ id });
 
     if (user) {
-        await collection.updateOne({ id }, data);
+        await usersCollection.updateOne({ id }, data);
 
         return { ...user, ...data };
     }
@@ -41,7 +35,7 @@ export const updateUser = async (id, data) => {
     return null;
 }
 
-const getUsersCollection = async () => {
+const init = async () => {
     if (usersCollection) {
         return usersCollection;
     }
@@ -66,3 +60,5 @@ const getUsersCollection = async () => {
         console.error('Could not connect to users collection.', error?.message);
     }
 }
+
+await init();
