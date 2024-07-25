@@ -3,7 +3,10 @@ import mongoClient from '.';
 let chatsCollection; 
 
 export const getAllUserChats = async (userId) => {
-    return await chatsCollection.find({ users: userId }).toArray();
+    return await chatsCollection
+        .find({ users: userId })
+        .sort({ createdAt: -1 })
+        .toArray();
 };
 
 export const getChat = async (chatId) => {

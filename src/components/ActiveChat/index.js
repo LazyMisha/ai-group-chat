@@ -37,9 +37,15 @@ const ActiveChat = ({
     
     useEffect(() => {
         socket.on('message', (message) => {
-            const { recievers, senderUserId } = message;
-            const isForMe = recievers.includes(sessionUserId) 
-                || senderUserId === sessionUserId;
+            const {
+                recievers, 
+                senderUserId, 
+                chatId: sendFromChat
+            } = message;
+            
+            const isForMe = (recievers.includes(sessionUserId) 
+                || senderUserId === sessionUserId)
+                && chatId === sendFromChat;
 
             if (isForMe) {
                 setMessages((prevMessages) => [...prevMessages, message]);
@@ -56,6 +62,7 @@ const ActiveChat = ({
 
         if (inputValue) {
             socket.emit('message', {
+                chatId,
                 text: inputValue,
                 senderUserId: sessionUserId,
                 senderUserName: sessionUserName,

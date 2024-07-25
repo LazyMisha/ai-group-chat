@@ -29,7 +29,7 @@ const CreateChatPopup = ({
 
         await post('/api/chats', chat);
 
-        setChats([...chats, chat]);
+        setChats([chat, ...chats]);
 
         onClose();
     };
