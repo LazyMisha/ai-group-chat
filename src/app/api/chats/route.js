@@ -3,6 +3,8 @@ import { saveChat, getAllUserChats, deleteChat, getChat } from "@/lib/mongo/chat
 import { saveMessagesByChatId } from "@/lib/mongo/messages";
 import authOptions from "@/utils/authOptions";
 
+export const fetchCache = 'force-no-store';
+
 const GET = async (req, res) => {
     const { user } = await getServerSession(authOptions);
     const { id: userId } = user;
