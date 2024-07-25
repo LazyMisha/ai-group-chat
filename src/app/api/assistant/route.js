@@ -4,8 +4,6 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const fetchCache = 'force-no-store';
-
 export async function POST(request) {
     const completion = await openai.chat.completions.create({
         messages: [
