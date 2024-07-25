@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import UserSelector from '../UserSelector';
-import { post } from '@/lib/requests';
+import { post, get } from '@/lib/requests';
 import styles from './createChatPopup.module.css';
 
 const CreateChatPopup = ({ 
@@ -18,8 +18,7 @@ const CreateChatPopup = ({
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response = await fetch('/api/users');
-            const { users } = await response.json();
+            const { users } = await get('/api/users');
 
             setUsers(users);
         };

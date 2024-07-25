@@ -1,5 +1,3 @@
-'use client';
-
 import UserSelectorOption from '../UserSelectorOption';
 import styles from './userSelector.module.css';
 
