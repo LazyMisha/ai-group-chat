@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import UserSelector from '../UserSelector';
 import { post } from '@/lib/requests';
 import styles from './createChatPopup.module.css';
@@ -13,7 +13,19 @@ const CreateChatPopup = ({
 }) => {
     const [chatName, setChatName] = useState('');
     const [selectedUserIds, setSelectedUserIds] = useState([]);
+    const [users, setUsers] = useState([]);
     const { id: sessionUserId } = sessionUser;
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const response = await fetch('/api/users');
+            const { users } = await response.json();
+
+            setUsers(users);
+        };
+
+        fetchUsers();
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -72,6 +84,7 @@ const CreateChatPopup = ({
                     sessionUser={sessionUser}
                     selectedUserIds={selectedUserIds}
                     setSelectedUserIds={setSelectedUserIds}
+                    users={users}
                 />
                 <div className={styles['buttons-container']}>
                     <button

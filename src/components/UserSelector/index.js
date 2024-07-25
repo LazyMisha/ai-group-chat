@@ -1,34 +1,14 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
 import UserSelectorOption from '../UserSelectorOption';
 import styles from './userSelector.module.css';
 
-const UserSelector = ({ 
+const UserSelector = ({
+    users, 
     sessionUser,
     selectedUserIds,
     setSelectedUserIds,
 }) => {
-    const [users, setUsers] = useState([]);
-    const isMounted = useRef(false);
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            if (isMounted.current) {
-                return;
-            }
-
-            isMounted.current = true;
-
-            const response = await fetch('/api/users');
-            const { users } = await response.json();
-
-            setUsers(users);
-        };
-
-        fetchUsers();
-    }, []);
-
     return (
         <div
             className={styles.select}

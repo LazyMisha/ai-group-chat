@@ -1,3 +1,5 @@
+'use client';
+
 import UserImage from "../UserImage";
 import styles from "./userSelectorOption.module.css";
 
