@@ -29,7 +29,7 @@ const ChatItemPreview = ({
                     Users: {users.join(', ')}
                 </div>
                 <div className={styles['chat-item-created']}>
-                    Created: {createdAt}
+                    Created: {new Date(createdAt).toLocaleString()}
                 </div>
             </div>
             { creator === sessionUserId &&
