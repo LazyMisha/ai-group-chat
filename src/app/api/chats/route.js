@@ -6,7 +6,7 @@ import authOptions from "@/utils/authOptions";
 const GET = async (req, res) => {
     const { user } = await getServerSession(authOptions);
     const { id: userId } = user;
-    const chatId = req.nextUrl.searchParams.get('chatId');
+    const chatId = req?.nextUrl?.searchParams?.get('chatId');
 
     if (chatId) {
         const chat = await getChat(chatId);
@@ -50,7 +50,7 @@ const POST = async (req, res) => {
 const DELETE = async (req, res) => {
     const { user } = await getServerSession(authOptions);
     const { id: userId } = user;
-    const chatId = req.nextUrl.searchParams.get('chatId');
+    const chatId = req?.nextUrl?.searchParams?.get('chatId');
     const chat = await getChat(chatId);
 
     if (!chat) {
