@@ -25,6 +25,12 @@ const nextConfig = {
                 hostname: 'www.yasaka.se',
                 port: '',
                 pathname: '/wp-content/uploads/2019/08/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'disgustingmen.com',
+                port: '',
+                pathname: '/wp-content/uploads/2017/11/**',
             }
         ]
     }

@@ -19,6 +19,7 @@ const authOptions = {
             const user = { id: "1", name: "J Smith", email: "jsmith@example.com", image: "https://voda.love/wp-content/uploads/2020/11/328578.jpg" }
             const user2 = { id: "2", name: "J Doe", email: "jdoe@example.com", image: "https://images.squarespace-cdn.com/content/v1/569591ff0ab3771dba3f1ec6/1453167464043-YWCO1KRYYH7SJNC3D1ZM/image-asset.jpeg" }
             const user3 = { id: "3", name: "Ma Lin", email: "malin@example.com", image: "https://www.yasaka.se/wp-content/uploads/2019/08/Ma-Lin-poto.jpg" }
+            const user4 = { id: "4", name: "Jack Rackham", email: "jackrack@example.com", image: "https://disgustingmen.com/wp-content/uploads/2017/11/V-teleseriale---CHyornyie-parusa---rol-Re%60khema-syigral-Tobi-SHmitts.jpg" }
       
             if (credentials?.username === "jsmith" && credentials?.password === "password") {
               return user
@@ -26,6 +27,8 @@ const authOptions = {
               return user2
             } else if (credentials?.username === "ma" && credentials?.password === "password") {
               return user3 
+            } else if (credentials?.username.toLowerCase() === "jack" && credentials?.password === "password") {
+              return user4 
             } else {
               return null
             }
