@@ -1,0 +1,29 @@
+.chat-not-found {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    font-size: 20px;
+    color: #8e8e8e;
+}
+
+.refresh-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+    min-height: 50px;
+    margin-top: 20px;
+    background-color: #333333;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    border-radius: 1.5rem;
+
+    &:hover {
+        background-color: #444444;
+    }
+}

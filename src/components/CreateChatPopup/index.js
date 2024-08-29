@@ -1,9 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import UserSelector from '../UserSelector';
-import { post, get } from '@/lib/requests';
+import Select from 'react-select'
+import SelectorOption from '../SelectorOption';
+import { post, get } from '@/utils/requests';
+import { chatGPT } from '@/utils/aiAssistant';
 import styles from './createChatPopup.module.css';
+
+const aiInstances = [{
+    ...chatGPT,
+}]
 
 const CreateChatPopup = ({ 
    onClose,
@@ -12,7 +18,8 @@ const CreateChatPopup = ({
    chats,
 }) => {
     const [chatName, setChatName] = useState('');
-    const [selectedUserIds, setSelectedUserIds] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [selectedAIInstances, setSelectedAIInstances] = useState([]);
     const [users, setUsers] = useState([]);
     const { id: sessionUserId } = sessionUser;
 
@@ -20,7 +27,13 @@ const CreateChatPopup = ({
         const fetchUsers = async () => {
             const { users } = await get('/api/users');
 
-            setUsers(users);
+            const usersToSet = users.map((user) => ({
+                ...user,
+                value: user.name,
+                label: user.name,
+            }));
+
+            setUsers(usersToSet);
         };
 
         fetchUsers();
@@ -29,11 +42,14 @@ const CreateChatPopup = ({
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        const selectedUserIds = selectedUsers.map(({ id }) => id);
+
         const chat = {
             chatName,
             messages: [],
             creator: sessionUserId,
             users: [sessionUserId, ...selectedUserIds],
+            aiInstances: selectedAIInstances,
             createdAt: new Date().toISOString(),
             id: crypto.randomUUID(),
         };
@@ -51,50 +67,46 @@ const CreateChatPopup = ({
                 className={styles['popup-form']}
                 onSubmit={handleSubmit}
             >
-                <label
-                    className={styles.label}
-                    htmlFor="chatName"
-                >
-                    Chat Name:
-                </label>
                 <input 
                     className={styles.input}
                     id="chatName" 
                     name="chatName" 
                     type="text"
-                    placeholder='Enter Chat Name'
+                    placeholder='Enter Chat Name...'
                     required
                     value={chatName}
                     onChange={(event) => setChatName(event.target.value)}
                 />
-                <label
-                    className={styles.label} 
-                    htmlFor="users"
-                >
-                    Select Users:
-                </label>
-                <span
-                    className={styles['selected-users']} 
-                    htmlFor="users"
-                >
-                    Selected Users: {selectedUserIds.length}
-                </span>
-                <UserSelector
-                    sessionUser={sessionUser}
-                    selectedUserIds={selectedUserIds}
-                    setSelectedUserIds={setSelectedUserIds}
-                    users={users}
+                <Select 
+                    options={users} 
+                    isMulti
+                    className={styles.select}
+                    components={{ Option: SelectorOption }}
+                    onChange={setSelectedUsers}
+                    value={selectedUsers}
+                    hideSelectedOptions={false}
+                    placeholder='Select Users...'
+                />
+                <Select 
+                    options={aiInstances} 
+                    isMulti
+                    className={styles.select}
+                    components={{ Option: SelectorOption }}
+                    onChange={setSelectedAIInstances}
+                    value={selectedAIInstances}
+                    hideSelectedOptions={false}
+                    placeholder='Select AI Instances...'
                 />
                 <div className={styles['buttons-container']}>
                     <button
-                        className={`${styles.button} ${styles['create-button']}`}
                         type="submit"
+                        className={`${styles.button} ${styles['create-button']}`}
                     >
                         Create Chat
                     </button>
                     <button
-                        className={`${styles.button} ${styles['cancel-button']}`}
                         type="button" 
+                        className={`${styles.button} ${styles['cancel-button']}`}
                         onClick={onClose}
                     >
                         Cancel

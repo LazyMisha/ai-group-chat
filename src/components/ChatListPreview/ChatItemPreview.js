@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './chatListPreview.module.css';
 
 const ChatItemPreview = ({ 
@@ -6,7 +7,14 @@ const ChatItemPreview = ({
     deleteChat,
     sessionUser,
 }) => {
-    const { chatName, users, creator, createdAt } = chat;
+    const { push } = useRouter();
+    const { 
+        chatName, 
+        users, 
+        creator, 
+        createdAt,
+        aiInstances,
+    } = chat;
     const { id: sessionUserId } = sessionUser;
 
     const deleteSelectedChat = (e) => {
@@ -14,6 +22,8 @@ const ChatItemPreview = ({
         e.stopPropagation();
 
         deleteChat(chat.id);
+
+        push('/chat');
     }
 
     return (
@@ -25,10 +35,13 @@ const ChatItemPreview = ({
                 <div className={styles['chat-item-name']} >
                     {chatName}
                 </div>
-                <div className={styles['chat-item-users']} >
-                    Users: {users.join(', ')}
+                <div className={styles['chat-item']} >
+                    Users: {users.length}
                 </div>
-                <div className={styles['chat-item-created']}>
+                <div className={styles['chat-item']} >
+                    AI instances: {aiInstances?.length || 0}
+                </div>
+                <div className={styles['chat-item']}>
                     Created: {new Date(createdAt).toLocaleString()}
                 </div>
             </div>

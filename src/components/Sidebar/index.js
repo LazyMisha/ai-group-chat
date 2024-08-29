@@ -5,7 +5,7 @@ import UserImage from '../UserImage';
 import CreateChatPopup from '../CreateChatPopup';
 import ChatListPreview from '../ChatListPreview';
 import KebabMenu from '../KebabMenu';
-import { get, del } from '@/lib/requests';
+import { get, del } from '@/utils/requests';
 import styles from './sidebar.module.css';
 
 const Sidebar = ({ 

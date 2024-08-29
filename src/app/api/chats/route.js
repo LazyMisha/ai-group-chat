@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { saveChat, getAllUserChats, deleteChat, getChat } from "@/lib/mongo/chats";
-import { saveMessagesByChatId } from "@/lib/mongo/messages";
+import { saveMessagesByChatId, deleteMessagesByChatId } from "@/lib/mongo/messages";
 import authOptions from "@/utils/authOptions";
 
 const GET = async (req, res) => {
@@ -10,6 +10,10 @@ const GET = async (req, res) => {
 
     if (chatId) {
         const chat = await getChat(chatId);
+
+        if (!chat) {
+            return Response.json({ message: 'Chat not found' }, { status: 404 });
+        }
 
         return Response.json({ chat });
     }
@@ -30,6 +34,7 @@ const POST = async (req, res) => {
         users,
         createdAt,
         messages,
+        aiInstances,
     } = body;
 
     const chat = {
@@ -37,6 +42,7 @@ const POST = async (req, res) => {
         chatName,
         users,
         createdAt,
+        aiInstances,
         creator: userId,
     };
 
@@ -62,6 +68,8 @@ const DELETE = async (req, res) => {
     }
 
     await deleteChat(chatId);
+
+    await deleteMessagesByChatId(chatId);
 
     return Response.json({ message: 'Chat deleted' }, { status: 200 });
 }

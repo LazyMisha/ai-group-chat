@@ -32,7 +32,13 @@ const nextConfig = {
                 hostname: 'disgustingmen.com',
                 port: '',
                 pathname: '/wp-content/uploads/2017/11/**',
-            }
+            },
+            {
+                protocol: 'https',
+                hostname: 'cdn-icons-png.flaticon.com',
+                port: '',
+                pathname: '/512/12222/12222560.png',
+            },
         ]
     }
 };

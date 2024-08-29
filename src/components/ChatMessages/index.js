@@ -6,9 +6,13 @@ import styles from './chatMessages.module.css';
 const ChatMessages = ({
     messages,
     sessionUser,
+    messagesEndRef,
 }) => {
     return (
-        <div className={styles['chat-messages-container']}>
+        <div 
+            ref={messagesEndRef}
+            className={styles['chat-messages-container']}
+        >
             {messages.map((message, index) => (
                 <ChatMessage
                     key={index}
@@ -18,9 +22,7 @@ const ChatMessages = ({
             ))}
             {messages.length === 0 && (
                 <div className={styles['no-messages-container']}>
-                    <p className={styles['no-messages-text']}>
-                        No messages yet
-                    </p>
+                    No messages yet
                 </div>
             )}
         </div>

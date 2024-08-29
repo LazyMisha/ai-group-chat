@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
+import ChatNotFound from '../ChatNotFound';
 import ChatHeader from '../ChatHeader';
 import ChatMessages from '../ChatMessages';
 import ChatInput from '../ChatInput';
-import { get } from '@/lib/requests';
+import { get, post } from '@/utils/requests';
 import styles from './activeChat.module.css';
 
 const socket = io();
@@ -14,11 +15,12 @@ const ActiveChat = ({
     sessionUser,
     chatId,
 }) => {
-    const [chat, setChat] = useState({});
+    const messagesEndRef = useRef(null);
+    const [chat, setChat] = useState(null);
     const [inputValue, setInputValue] = useState('');
     const [messages, setMessages] = useState([]);
+    const [aiInstances, setAIInstances] = useState([]);
 
-    const { chatName, users } = chat;
     const { 
         id: sessionUserId,
         name: sessionUserName,
@@ -26,13 +28,23 @@ const ActiveChat = ({
     } = sessionUser;
 
     useEffect(() => {
-        const fetchChat = async () => {
-            const { chat } = await get(`/api/chats?chatId=${chatId}`);
+        const fetchChatData = async () => {
+            try {
+                const { chat } = await get(`/api/chats?chatId=${chatId}`);
+                const { aiInstances = [] } = chat || {};
 
-            setChat(chat);
+                setChat(chat);
+                setAIInstances(aiInstances);
+
+                const { messages: initMessages } = await get(`/api/messages?chatId=${chatId}`);
+
+                setMessages(initMessages);
+            } catch (error) {
+                console.error('Error fetching chat data', error);
+            }
         }
 
-        fetchChat();
+        fetchChatData();
     }, [chatId]);
     
     useEffect(() => {
@@ -55,36 +67,72 @@ const ActiveChat = ({
         return () => {
             socket.off('message');
         };
-    });
+    }, []);
 
-    const sendMessage = (e) => {
+    useEffect(() => {
+        const cnt = messagesEndRef.current;
+
+            if (cnt) {
+                cnt.scrollTop = cnt.scrollHeight
+            }
+
+    }, [messages]);
+
+    const sendMessage = async (e) => {
         e.preventDefault();
 
         if (inputValue) {
-            socket.emit('message', {
+            const { users } = chat;
+
+            const message = {
                 chatId,
                 text: inputValue,
                 senderUserId: sessionUserId,
                 senderUserName: sessionUserName,
                 senderUserImage: sessionUserImage,
                 recievers: users,
-            });
+            };
+
+            socket.emit('message', message);
+
             setInputValue('');
+
+            const { message: aiMessage } = await post('/api/messages', { 
+                chatId,
+                aiInstances,
+                messages: [message],
+                recievers: users,
+            });            
+
+            if (aiMessage) {
+                socket.emit('message', aiMessage);
+            }
         }
     }
 
     return (
         <div className={styles['active-chat-container']}>
-            <ChatHeader chatName={chatName} />
-            <ChatMessages
-                sessionUser={sessionUser} 
-                messages={messages}
-            />
-            <ChatInput
-                sendMessage={sendMessage}
-                inputValue={inputValue}
-                setInputValue={setInputValue}
-            />
+            {
+                !chat ? (
+                    <ChatNotFound />
+                ) : (
+                    <>
+                        <ChatHeader 
+                            chatName={chat?.chatName} 
+                        />
+                        <ChatMessages
+                            messagesEndRef={messagesEndRef}
+                            sessionUser={sessionUser} 
+                            messages={messages}
+                        />
+                        <ChatInput
+                            sendMessage={sendMessage}
+                            inputValue={inputValue}
+                            setInputValue={setInputValue}
+                        />
+                    </>
+                )
+            }
         </div>
     );
 }

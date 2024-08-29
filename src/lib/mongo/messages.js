@@ -2,8 +2,8 @@ import mongoClient from '.';
 
 let messagesCollection;
 
-export const getAllMessages = async (chatId) => {
-    return await messagesCollection.find({ chatId }).toArray();
+export const getMessagesByChatId = async (chatId) => {
+    return await messagesCollection.findOne({ chatId });
 };
 
 export const saveMessagesByChatId = async (chatId, messages) => {
@@ -23,6 +23,10 @@ export const saveMessagesByChatId = async (chatId, messages) => {
         await messagesCollection.insertOne({ chatId, messages });
     }
 };
+
+export const deleteMessagesByChatId = async (chatId) => {
+    await messagesCollection.deleteOne({ chatId });
+}
 
 const init = async () => {
     try {
